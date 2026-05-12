@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:46:10 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 14:14:50 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:56:39 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,31 @@ void BitcoinExchange::parseDate(std::stringstream &str)
 			throw BitcoinExchange::TheException("Csv date might not be an int");
 		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
 			throw BitcoinExchange::TheException("CSV date is out of bound");
+		if (intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11)
+		{
+			if (intDay > 30)
+				throw BitcoinExchange::TheException("CSV date is out of bound");
+		}
+		if (intMonth == 2)
+		{
+			int	flag;
+			if (intYear % 400 == 0)
+				flag = 1;
+			if (intYear % 100 == 0)
+				flag = 0;
+			if (intYear % 4 == 0)
+				flag = 1;
+			if (flag == 1)
+			{
+				if (intDay > 29)
+					throw BitcoinExchange::TheException("CSV date is out of bound");
+			}
+			else
+			{
+				if (intDay > 28)
+					throw BitcoinExchange::TheException("CSV date is out of bound");
+			}
+		}
 		if (this->lines.find(str.str()) == this->lines.end())
 			this->lines.insert(std::make_pair(str.str(), 0));
 		else

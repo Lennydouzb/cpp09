@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:45:30 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 14:37:19 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:58:15 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "BitcoinExchange.hpp"
@@ -80,6 +80,32 @@ static void	parseLine(std::string tmp, BitcoinExchange &BtcExchange)
 			throw BitcoinExchange::TheException("Input file date is not even a number");
 		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
 			throw BitcoinExchange::TheException("Bad input =>" + dateS);
+		if (intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11)
+		{
+			if (intDay > 30)
+				throw BitcoinExchange::TheException("input date is out of bound");
+		}
+		if (intMonth == 2)
+		{
+			int	flag;
+			if (intYear % 400 == 0)
+				flag = 1;
+			if (intYear % 100 == 0)
+				flag = 0;
+			if (intYear % 4 == 0)
+				flag = 1;
+			if (flag == 1)
+			{
+				if (intDay > 29)
+					throw BitcoinExchange::TheException("input date is out of bound");
+			}
+			else
+			{
+				if (intDay > 28)
+					throw BitcoinExchange::TheException("input date is out of bound");
+			}
+		}
+
 		if (!(value >> floatValue))
 			throw BitcoinExchange::TheException("Not a correct digit");
 		if (floatValue < 0)
