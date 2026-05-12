@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:22:41 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/07 02:39:39 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 02:47:47 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #pragma once
@@ -24,6 +24,7 @@ class BitcoinExchange
 		std::string						file;
 		std::map<std::string, float>	lines;
 		BitcoinExchange();
+		bool							order;
 	public:
 		BitcoinExchange(std::string file);
 		~BitcoinExchange();
@@ -31,30 +32,20 @@ class BitcoinExchange
 		BitcoinExchange& operator=(const BitcoinExchange& other);
 	
 
-		class FileDoesntExistException : public std::exception
+		class TheException : public std::exception
 		{
+			private:
+				std::string message;
 			public:
-				const char *what() const throw(); 
-		};
-		class BadCsvException : public std::exception
-		{
-			public:
-				const char *what() const throw(); 
-		};
-		class	NothingReadException : public std::exception
-		{
-			public:
-				const char *what() const throw(); 
-		};
-		class	BadNumberException : public std::exception
-		{
-			public:
+				TheException(std::string message);
 				const char *what() const throw(); 
 		};
 
 		void	readFile();
 		void	parse(std::stringstream &str);
+		void	parsefirst(std::stringstream &str);
+		void	parseDate(std::stringstream &str);
+		void	parseValue(std::stringstream &str, std::stringstream &date);
 		std::map<std::string, float> &getLines();
 };
-void	trim(std::string &str);
 void	calculus(BitcoinExchange &csv, BitcoinExchange &file);

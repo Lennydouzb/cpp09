@@ -6,12 +6,13 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:46:10 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/07 02:39:28 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 01:05:45 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <cctype>
+#include <sstream>
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -44,7 +45,10 @@ void BitcoinExchange::readFile()
 	std::ifstream		csv((this->file).c_str());
 	std::string			str;
 	if (!(csv.is_open()))
-		throw BitcoinExchange::FileDoesntExistException();
+		throw BitcoinExchange::TheException("File doesn't exist");
+	std::getline(csv, str);
+	std::stringstream	ss(str);
+	this->parsefirst(ss);
 	while (std::getline(csv, str))
 	{	
 		std::stringstream	ss(str);
@@ -54,78 +58,28 @@ void BitcoinExchange::readFile()
 
 void BitcoinExchange::parse(std::stringstream &str)
 {
-	std::string		date, value;
-	std::getline(str, date, this->sep);	
-	std::getline(str, value);
-	trim(date);
-	trim(value);
-	if (date == "date")
-		return ;
-	std::stringstream streamDate(date);
-	std::string year;
-	std::string month;
-	std::string day;
-	std::getline(streamDate, year, '-');	
-	std::getline(streamDate, month, '-');
-	std::getline(streamDate, day);
-	if (!year.empty() && !month.empty() && !day.empty())
+	if (order == 1)
 	{
-		std::stringstream streamYear(year);
-		std::stringstream streamMonth(month);
-		std::stringstream streamDay(day);
-		std::stringstream streamValue(value);
-
-		int		intYear;
-		int		intMonth;
-		int		intDay;
-		float	floatValue;
-
-		if (!(streamYear >> intYear) || !(streamDay >> intDay)
-				|| !(streamMonth >> intMonth) || !(streamValue >> floatValue))
-			throw BitcoinExchange::BadCsvException();
-		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
-			throw BitcoinExchange::BadCsvException();
-		if (floatValue > INT_MAX || floatValue < 0)
-			throw BitcoinExchange::BadNumberException();
-		this->lines.insert(std::make_pair(date, floatValue));
+		std::string date;
+		std::getline(str, date, ',');
+		std::stringstream dateStream(date);
+		this->parseDate(dateStream);
+		
+		std::string value;
+		std::getline(str, value);
+		std::stringstream valueStream(value);
+		this->parseValue(valueStream, dateStream);
 	}
-	else
-		throw BitcoinExchange::BadCsvException();
-}
-	
-const char * BitcoinExchange::FileDoesntExistException::what()const throw()
-{
-	return ("Error : File doesn't exist");
 }
 
-const char * BitcoinExchange::BadCsvException::what()const throw()
+BitcoinExchange::TheException::TheException(std::string message)
 {
-	return ("Error : this csv file is garbage");
+	this->message = message;
 }
 
-const char * BitcoinExchange::NothingReadException::what()const throw()
+const char * BitcoinExchange::TheException::what()const throw()
 {
-
-	return ("Error : nothing has been read");
-}
-
-void	trim(std::string &str)
-{
-	std::string::iterator it = str.begin();
-	std::string::iterator itend = str.end();
-	std::string::iterator start = str.begin();
-	std::string::iterator end = str.end();
-	while (it != itend && (*it == ' ' || *it == '\t'))
-		start++;
-	while (it != itend && (*itend == ' ' || *itend == '\t'))
-		end--;
-	std::string	tmp(start, end);
-	str = tmp;
-}
-
-const char * BitcoinExchange::BadNumberException::what()const throw()
-{
-	return ("Error : bad number");
+	return (message.c_str());
 }
 
 std::map<std::string, float> &BitcoinExchange::getLines()
@@ -133,3 +87,62 @@ std::map<std::string, float> &BitcoinExchange::getLines()
 	return (this->lines);
 }
 
+void BitcoinExchange::parsefirst(std::stringstream &str)
+{
+	std::string firstval;
+	std::string secondval;
+	std::getline(str, firstval,',');
+	if (firstval != "data" && firstval != "exchange_rate")
+		throw BitcoinExchange::TheException("Bad csv field");
+	std::getline(str, secondval);
+	if (secondval != "data" && secondval != "exchange_rate")
+		throw BitcoinExchange::TheException("Bad csv field");
+	if (firstval == secondval)
+		throw BitcoinExchange::TheException("Duplicated csv field");
+	if (firstval == "date")
+		this->order = 1;
+	else
+		this ->order = 0;
+}
+
+void BitcoinExchange::parseDate(std::stringstream &str)
+{
+	std::string year;
+	std::string month;
+	std::string day;
+	std::getline(str, year, '-');	
+	std::getline(str, month, '-');
+	std::getline(str, day);
+	if (!year.empty() && !month.empty() && !day.empty())
+	{
+		std::stringstream streamYear(year);
+		std::stringstream streamMonth(month);
+		std::stringstream streamDay(day);
+
+		int		intYear;
+		int		intMonth;
+		int		intDay;
+
+		if (!(streamYear >> intYear) || !(streamDay >> intDay)
+				|| !(streamMonth >> intMonth))
+			throw BitcoinExchange::TheException("Csv date might not be an int");
+		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
+			throw BitcoinExchange::TheException("CSV date is out of bound");
+		if (this->lines.find(str.str()) == this->lines.end())
+			this->lines.insert(std::make_pair(str.str(), 0));
+		else
+			throw BitcoinExchange::TheException("Duplicated row");
+	}
+	else
+		throw BitcoinExchange::TheException("Bad csv date");
+
+}
+
+void BitcoinExchange::parseValue(std::stringstream &str, std::stringstream &date)
+{
+	float floatValue;
+
+	if (!(str >> floatValue))
+		throw BitcoinExchange::TheException("Bad value");
+	this->lines[date.str()] = floatValue;
+}
