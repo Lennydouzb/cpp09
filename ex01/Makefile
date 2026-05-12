@@ -1,8 +1,9 @@
 CXX=c++
 CXXFLAGS = -Wall -Werror -Wextra -g -std=c++98
-NAME = template
+NAME = RPN
 SRC_DIR = ./
 SRCS = $(SRC_DIR)main.cpp \
+	   $(SRC_DIR)RPN.cpp
 
 OBJ_DIR = .build/
 OBJS = $(SRCS:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
