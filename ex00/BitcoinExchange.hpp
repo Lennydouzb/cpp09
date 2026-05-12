@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:22:41 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 02:47:47 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 13:23:35 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #pragma once
@@ -37,6 +37,7 @@ class BitcoinExchange
 			private:
 				std::string message;
 			public:
+				~TheException() throw();
 				TheException(std::string message);
 				const char *what() const throw(); 
 		};
@@ -48,4 +49,3 @@ class BitcoinExchange
 		void	parseValue(std::stringstream &str, std::stringstream &date);
 		std::map<std::string, float> &getLines();
 };
-void	calculus(BitcoinExchange &csv, BitcoinExchange &file);

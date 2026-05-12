@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:46:10 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 01:05:45 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/12 14:14:50 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <cctype>
 #include <sstream>
 
+BitcoinExchange::TheException::~TheException() throw() {};
 BitcoinExchange::BitcoinExchange()
 {
 }
@@ -92,10 +93,10 @@ void BitcoinExchange::parsefirst(std::stringstream &str)
 	std::string firstval;
 	std::string secondval;
 	std::getline(str, firstval,',');
-	if (firstval != "data" && firstval != "exchange_rate")
+	if (firstval != "date" && firstval != "exchange_rate")
 		throw BitcoinExchange::TheException("Bad csv field");
 	std::getline(str, secondval);
-	if (secondval != "data" && secondval != "exchange_rate")
+	if (secondval != "date" && secondval != "exchange_rate")
 		throw BitcoinExchange::TheException("Bad csv field");
 	if (firstval == secondval)
 		throw BitcoinExchange::TheException("Duplicated csv field");
@@ -144,5 +145,7 @@ void BitcoinExchange::parseValue(std::stringstream &str, std::stringstream &date
 
 	if (!(str >> floatValue))
 		throw BitcoinExchange::TheException("Bad value");
+	if (floatValue < 0)
+		throw BitcoinExchange::TheException("Negative csv value");
 	this->lines[date.str()] = floatValue;
 }
