@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 12:45:49 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/13 15:35:24 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:28:19 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #pragma once
@@ -21,7 +21,6 @@ class PmergeMe
 		std::deque<char>		deque;
 	public:
 		PmergeMe();
-		PmergeMe(char **args, int size);
 		PmergeMe(const PmergeMe &other);
 		~PmergeMe();
 		PmergeMe &operator=(const PmergeMe &other);
@@ -30,3 +29,5 @@ class PmergeMe
 };
 
 bool	checkdigits(char **args, int size);
+std::vector<char> createVector(char **av, int size);
+std::deque<char> createDeque(char **av, int size);

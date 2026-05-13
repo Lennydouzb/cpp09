@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 14:33:23 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/13 15:45:34 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:49:57 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,28 @@ bool	checkdigits(char **args, int size)
 	return true;
 }
 
-PmergeMe::PmergeMe(char **args, int size)
+std::vector<char> createVector(char **av, int size)
 {
 	int	i = 0;
-
+	std::vector<char> vector;
 	while (i < size)
 	{
-		this->deque.push_back(args[i][0]);
-		this->vector.push_back(args[i][0]);
+		vector.push_back(av[i][0]);
 		++i;
 	}
+	return vector;
+}
+
+std::deque<char> createDeque(char **av, int size)
+{
+	int	i = 0;
+	std::deque<char> deque;
+	while (i < size)
+	{
+		deque.push_back(av[i][0]);
+		++i;
+	}
+	return deque;
 }
 
 PmergeMe::PmergeMe(const PmergeMe &other)
