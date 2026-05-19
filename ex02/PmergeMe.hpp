@@ -24,8 +24,9 @@ class PmergeMe
 		PmergeMe(const PmergeMe &other);
 		~PmergeMe();
 		PmergeMe &operator=(const PmergeMe &other);
-		void	fordJohnsonVector(std::vector<char> arr);
-		void	fordJohnsonDeque(std::deque<char> arr);
+		std::vector<int> getJacobsthalVector(size_t	max) const;	
+		void	fordJohnsonVector(std::vector<char> &arr);
+		void	fordJohnsonDeque(std::deque<char> &arr);
 };
 
 bool	checkdigits(char **args, int size);

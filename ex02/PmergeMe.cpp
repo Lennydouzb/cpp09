@@ -39,6 +39,19 @@ std::vector<char> createVector(char **av, int size)
 	}
 	return vector;
 }
+std::vector<size_t> PmergeMe::getJacobsthalVector(size_t max) const
+{
+	std::vector<size_t> jacob;
+    jacob.push_back(1);
+    jacob.push_back(3);
+    
+    while (jacob.back() < max)
+	{
+        size_t next = jacob.back() + 2 * *(jacob.end() - 2);
+        jacob.push_back(next);
+    }
+    return jacob;
+}
 
 std::deque<char> createDeque(char **av, int size)
 {
@@ -69,18 +82,31 @@ PmergeMe & PmergeMe::operator=(const PmergeMe &other)
 	return *this;
 }
 
-void PmergeMe::fordJohnsonVector(std::vector<char> arr)
+void PmergeMe::fordJohnsonVector(std::vector<char> &arr)
 {
 	std::vector<std::pair<char, char>> pairs;
+	std::vector<char> winners;
+	std::vector<char> losers;
 	char solo;
+
 	if (arr.size() == 1)
 		return ;
+	if (arr.size() % 2 == 1)
+	{
+			solo = *(arr.end() - 1);
+			arr.pop_back();
+	}
 	for(std::vector<char>::iterator it = arr.begin(); it != arr.end(); ++it)
 	{
-		if (arr.size() % 2 == 1)
-			solo = *(arr.end() - 1);
+
 		pairs.push_back(std::make_pair(*it, *(++it)));
+		if (pairs.back().first < pairs.back().second)
+			std::swap(pairs.back().first, pairs.back().second);
+		winners.push_back(pairs.back().first);	
+		losers.push_back(pairs.back().second);
 	}
+	fordJohnsonVector(winners);
+
 }
 
 void PmergeMe::fordJohnsonDeque(std::deque<char> arr)
