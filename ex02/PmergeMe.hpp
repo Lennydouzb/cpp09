@@ -24,8 +24,8 @@ class PmergeMe
 		PmergeMe(const PmergeMe &other);
 		~PmergeMe();
 		PmergeMe &operator=(const PmergeMe &other);
-		std::vector<int> getJacobsthalVector(size_t	max) const;	
-		void	fordJohnsonVector(std::vector<char> &arr);
+		std::vector<size_t> getJacobsthalVector(size_t	max) const;	
+		void	fordJohnsonVector(std::vector<std::pair<char,char>> &arr);
 		void	fordJohnsonDeque(std::deque<char> &arr);
 };
 

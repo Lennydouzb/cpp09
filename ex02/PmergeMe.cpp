@@ -82,7 +82,7 @@ PmergeMe & PmergeMe::operator=(const PmergeMe &other)
 	return *this;
 }
 
-void PmergeMe::fordJohnsonVector(std::vector<char> &arr)
+void PmergeMe::fordJohnsonVector(std::vector<std::pair<char, char>> &arr)
 {
 	std::vector<std::pair<char, char>> pairs;
 	std::vector<char> winners;
@@ -93,20 +93,20 @@ void PmergeMe::fordJohnsonVector(std::vector<char> &arr)
 		return ;
 	if (arr.size() % 2 == 1)
 	{
-			solo = *(arr.end() - 1);
+			solo = arr.back().first;
 			arr.pop_back();
 	}
-	for(std::vector<char>::iterator it = arr.begin(); it != arr.end(); ++it)
+	for(std::vector<std::pair<char, char>>::iterator it = arr.begin(); it != arr.end();)
 	{
 
-		pairs.push_back(std::make_pair(*it, *(++it)));
+		pairs.push_back(std::make_pair(it->first, (++it)->first));
+		++it;
 		if (pairs.back().first < pairs.back().second)
 			std::swap(pairs.back().first, pairs.back().second);
 		winners.push_back(pairs.back().first);	
 		losers.push_back(pairs.back().second);
 	}
 	fordJohnsonVector(winners);
-
 }
 
 void PmergeMe::fordJohnsonDeque(std::deque<char> arr)
