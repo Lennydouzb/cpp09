@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 14:33:23 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/26 14:49:29 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/26 15:52:55 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@
 
 PmergeMe::PmergeMe(){}
 
+bool checkGood(std::vector<int> &vec, std::deque<int> &deq, std::vector<int> before)
+{
+	if (before.size() != vec.size())
+        return false;
+	if (before.size() != deq.size())
+        return false;
+
+    std::sort(before.begin(), before.end());
+	if (!std::equal(before.begin(), before.end(), vec.begin()))
+		return false;
+	if (!std::equal(before.begin(), before.end(), deq.begin()))
+		return false;
+	return true;
+}
+
 void	PmergeMe::doAlgorithms(char **av, int size)
 {
 	int	i =0;
@@ -23,27 +38,45 @@ void	PmergeMe::doAlgorithms(char **av, int size)
 	std::vector<int>	before;
 	std::deque<int>		deq;
 
+
+	while (i < size)
+	{
+		int val;
+		std::stringstream tmp(av[i]);
+		tmp >> val;
+		before.push_back(val);
+		++i;
+	}
+	long long begin = getTime();
+	i = 0;
 	while (i < size)
 	{
 		int val;
 		std::stringstream tmp(av[i]);
 		tmp >> val;
 		vec.push_back(val);
-		deq.push_back(val);
-		before.push_back(val);
 		++i;
 	}
-	long long begin = getTime();
 	this->fordJohnsonVector(vec);
 	long long end = getTime();
 
 	long long beginDeque = getTime();
+	i = 0;
+	while (i < size)
+	{
+		int val;
+		std::stringstream tmp(av[i]);
+		tmp >> val;
+		deq.push_back(val);
+		++i;
+	}
 	this->fordJohnsonDeque(deq);
 	long long endDeque = getTime();
-	if (deq.size() != vec.size())
-		std::cerr << "Error" << std::endl;
-	if (deq.size() == vec.size() && !(std::equal(vec.begin(), vec.end(), deq.begin())))
-		std::cerr << "Error" << std::endl;
+	if (!checkGood(vec, deq, before))
+	{
+		std::cerr << "Error the algorithm didn't work" << std::endl;
+		return;
+	}
 	std::cout << "Before: ";
 	for (std::vector<int>::iterator it = before.begin(); it != before.end() - 1; ++it)
 	{
@@ -146,7 +179,8 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &arr)
 			current = winners.size();
 		for (size_t j = current; j > previous; --j)
 		{
-			//a bit tricky here : the jacob vector get us the indexes then between 3 and 5 for example its 5th then 4th
+			//a bit tricky here : the jacob vector get us the indexes to go
+			//if it was n = 5 and n-1 = 3 we should 5th then 4th
 			std::vector<std::pair<int, int> >::iterator aPair = findVector(winners[j - 1], pairs);
 			std::vector<int>::iterator winnerPos = std::find(main.begin(), main.end(), aPair->first);
 			place = std::lower_bound(main.begin(), winnerPos, aPair->second);

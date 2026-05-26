@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:46:10 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 15:56:39 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/26 16:32:39 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,9 @@ void BitcoinExchange::parseDate(std::stringstream &str)
 		int		intDay;
 
 		if (!(streamYear >> intYear) || !(streamDay >> intDay)
-				|| !(streamMonth >> intMonth))
+				|| !(streamMonth >> intMonth) || streamDay.str().size() != 2)
 			throw BitcoinExchange::TheException("Csv date might not be an int");
-		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
+		if (intYear < 1000 || intYear > 9999 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
 			throw BitcoinExchange::TheException("CSV date is out of bound");
 		if (intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11)
 		{

@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 12:45:49 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/26 14:37:41 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/26 15:52:04 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #pragma once
@@ -30,7 +30,8 @@ class PmergeMe
 		void	doAlgorithms(char **av, int size);
 };
 
-long long getTime();
+bool		checkGood(std::vector<int> &vec, std::deque<int> &deq, std::vector<int> before);
+long long	getTime();
 std::vector<std::pair<int, int> >::iterator findVector(int neelde, std::vector<std::pair<int, int> > &haystack);
 std::deque<std::pair<int, int> >::iterator findDeque(int neelde, std::deque<std::pair<int, int> > &haystack);
 bool	checkdigits(char **args, int size);

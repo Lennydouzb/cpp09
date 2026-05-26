@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:45:30 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 15:58:15 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/26 16:34:37 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "BitcoinExchange.hpp"
@@ -76,9 +76,9 @@ static void	parseLine(std::string tmp, BitcoinExchange &BtcExchange)
 		float		floatValue;
 
 		if (!(streamYear >> intYear) || !(streamDay >> intDay)
-				|| !(streamMonth >> intMonth))
-			throw BitcoinExchange::TheException("Input file date is not even a number");
-		if (intYear < 2009 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
+				|| !(streamMonth >> intMonth) || streamDay.str().size() != 2)
+			throw BitcoinExchange::TheException("Input file date might not be an int");
+		if (intYear < 1000 || intYear > 9999 || (intMonth < 1 || intMonth > 12) || intDay < 1 || intDay > 31)
 			throw BitcoinExchange::TheException("Bad input =>" + dateS);
 		if (intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11)
 		{
