@@ -71,6 +71,18 @@ void BitcoinExchange::parse(std::stringstream &str)
 		std::stringstream valueStream(value);
 		this->parseValue(valueStream, dateStream);
 	}
+	if (order == 0)
+	{
+		std::string value;
+		std::getline(str, value, ',');
+		std::stringstream valueStream(value);
+		
+		std::string date;
+		std::getline(str, date);
+		std::stringstream dateStream(date);
+		this->parseDate(dateStream);
+		this->parseValue(valueStream, dateStream);
+	}
 }
 
 BitcoinExchange::TheException::TheException(std::string message)
@@ -124,6 +136,8 @@ void BitcoinExchange::parseDate(std::stringstream &str)
 		int		intMonth;
 		int		intDay;
 
+		if (streamYear.str().size() != 4 || streamMonth.str().size() != 2 || streamDay.str().size() != 2)
+			throw BitcoinExchange::TheException("Input file date is badly typed");
 		if (!(streamYear >> intYear) || !(streamDay >> intDay)
 				|| !(streamMonth >> intMonth) || streamDay.str().size() != 2)
 			throw BitcoinExchange::TheException("Csv date might not be an int");
@@ -136,13 +150,16 @@ void BitcoinExchange::parseDate(std::stringstream &str)
 		}
 		if (intMonth == 2)
 		{
-			int	flag;
-			if (intYear % 400 == 0)
-				flag = 1;
-			if (intYear % 100 == 0)
-				flag = 0;
+			int	flag = 0;
 			if (intYear % 4 == 0)
 				flag = 1;
+			if (intYear % 100 == 0)
+			{
+				if (intYear % 400 == 0)
+					flag = 1;
+				else	
+					flag = 0;
+			}
 			if (flag == 1)
 			{
 				if (intDay > 29)

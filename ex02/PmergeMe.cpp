@@ -182,7 +182,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &arr)
 			//a bit tricky here : the jacob vector get us the indexes to go
 			//if it was n = 5 and n-1 = 3 we should 5th then 4th
 			std::vector<std::pair<int, int> >::iterator aPair = findVector(winners[j - 1], pairs);
-			std::vector<int>::iterator winnerPos = std::find(main.begin(), main.end(), aPair->first);
+			std::vector<int>::iterator winnerPos = std::find(main.begin(), main.end(), winners[j - 1]);
 			place = std::lower_bound(main.begin(), winnerPos, aPair->second);
 			main.insert(place, aPair->second);
 		}
@@ -241,7 +241,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &arr)
 		{
 			//a bit tricky here : the jacob deque get us the indexes then between 3 and 5 for example its 5th then 4th
 			std::deque<std::pair<int, int> >::iterator aPair = findDeque(winners[j - 1], pairs);
-			std::deque<int>::iterator winnerPos = std::find(main.begin(), main.end(), aPair->first);
+			std::deque<int>::iterator winnerPos = std::find(main.begin(), main.end(), winners[j - 1]);
 			place = std::lower_bound(main.begin(), winnerPos, aPair->second);
 			main.insert(place, aPair->second);
 		}
@@ -261,7 +261,10 @@ std::vector<std::pair<int, int> >::iterator findVector(int needle, std::vector<s
 	for (std::vector<std::pair<int, int> >::iterator it = haystack.begin(); it != haystack.end(); ++it)
 	{
 		if (needle == it->first)
+		{
+			it->first = -1; //to avoid finding the same pair twice because of duplicates
 			return it;
+		}
 	}
 	return haystack.begin();
 }
@@ -272,7 +275,10 @@ std::deque<std::pair<int, int> >::iterator findDeque(int needle, std::deque<std:
 	for (std::deque<std::pair<int, int> >::iterator it = haystack.begin(); it != haystack.end(); ++it)
 	{
 		if (needle == it->first)
+		{
+			it->first = -1; //to avoid finding the same pair twice because of duplicates
 			return it;
+		}
 	}
 	return haystack.begin();
 }

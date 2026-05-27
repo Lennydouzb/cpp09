@@ -25,12 +25,8 @@ static void checkFirstLine (std::stringstream &str)
 
 	firstval = str.str().substr(0, pos);
     secondval = str.str().substr(pos + 3);
-	if (firstval != "date" && firstval != "value")
+	if (firstval != "date" || secondval != "value")
 		throw BitcoinExchange::TheException("Bad input file field");
-	if (secondval != "date" && secondval != "value")
-		throw BitcoinExchange::TheException("Bad input file field");
-	if (firstval == secondval)
-		throw BitcoinExchange::TheException("Duplicated input file field");
 }
 
 static void	calculus(std::string date, float value, BitcoinExchange& BtcExchange)
@@ -75,6 +71,8 @@ static void	parseLine(std::string tmp, BitcoinExchange &BtcExchange)
 		
 		float		floatValue;
 
+		if (streamYear.str().size() != 4 || streamMonth.str().size() != 2 || streamDay.str().size() != 2)
+			throw BitcoinExchange::TheException("Input file date is badly typed");
 		if (!(streamYear >> intYear) || !(streamDay >> intDay)
 				|| !(streamMonth >> intMonth) || streamDay.str().size() != 2)
 			throw BitcoinExchange::TheException("Input file date might not be an int");
@@ -87,13 +85,16 @@ static void	parseLine(std::string tmp, BitcoinExchange &BtcExchange)
 		}
 		if (intMonth == 2)
 		{
-			int	flag;
-			if (intYear % 400 == 0)
-				flag = 1;
-			if (intYear % 100 == 0)
-				flag = 0;
+			int	flag = 0;
 			if (intYear % 4 == 0)
 				flag = 1;
+			if (intYear % 100 == 0)
+			{
+				if (intYear % 400 == 0)
+					flag = 1;
+				else	
+					flag = 0;
+			}
 			if (flag == 1)
 			{
 				if (intDay > 29)
@@ -123,8 +124,11 @@ int	main(int ac, char **av)
 
 {
 	std::string str;
-	if (ac < 2)
+	if (ac != 2)
+	{
+		std::cout << "Error: Usage is " << av[0] << " <input_file>" << std::endl;
 		return 1;
+	}
 	std::ifstream file(av[1]);
 	BitcoinExchange BtcClienCsv("data.csv");
 	try

@@ -22,6 +22,8 @@ int	main(int ac, char **av)
 	{
 		RPN myRpn;
 		myRpn.proceedRPN(av[1]);
+		if (myRpn.getStack().size() != 1)
+			throw RPN::TheException("Error");
 		std::cout << myRpn.getStack().top() << std::endl;
 	}catch(std::exception &e)
 	{
