@@ -6,11 +6,12 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 14:33:23 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/26 15:52:55 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/27 21:36:04 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+#include <cctype>
 #include <sys/time.h>
 #include <algorithm>
 
@@ -110,6 +111,11 @@ bool	checkdigits(char **args, int size)
 	while (i < size)
 	{
 		std::stringstream val(args[i]);
+		for (size_t t = 0; t < val.str().size(); ++t)
+		{
+			if (!std::isdigit(val.str()[t]))
+				return false;
+		}
 		long long test;
 		if (!(val >> test))
 			return false;
@@ -117,6 +123,7 @@ bool	checkdigits(char **args, int size)
 			return false;
 		if (test < 0)
 			return false;
+
 		++i;
 	}
 	return true;
