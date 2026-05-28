@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:46:10 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/26 16:32:39 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/28 18:45:55 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,10 +181,39 @@ void BitcoinExchange::parseDate(std::stringstream &str)
 
 }
 
+bool checkVal(std::stringstream &str)
+{
+	int	flag = 0;
+	for (size_t i = 0; i < str.str().length(); ++i)
+	{
+		if (flag == 1)
+		{
+			if(!std::isdigit(str.str()[i]))
+				return false;
+			flag = 0;
+		}
+		else if (!std::isdigit(str.str()[i]))
+		{
+			if (str.str()[i] == '.')
+			{
+				flag = 1;
+				continue;
+			}
+			else
+				return false;
+		}
+	}
+	if (flag == 1)
+		return false;
+	return true;
+}
+
 void BitcoinExchange::parseValue(std::stringstream &str, std::stringstream &date)
 {
 	float floatValue;
-
+	
+	if (!checkVal(str))
+		throw BitcoinExchange::TheException("Bad value");
 	if (!(str >> floatValue))
 		throw BitcoinExchange::TheException("Bad value");
 	if (floatValue < 0)

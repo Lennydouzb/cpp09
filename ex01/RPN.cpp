@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 16:10:06 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 17:18:23 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/28 18:48:48 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ RPN& RPN::operator=(const RPN&  aRPN)
 	return *this;
 }
 
-std::stack<int> RPN::getStack()
+std::stack<unsigned int> RPN::getStack()
 {
 	return (this->theStack);
 }
@@ -50,16 +50,29 @@ void RPN::proceedRPN(std::string str)
 				this->theStack.push(*it - '0');
 			else if (theStack.size() >= 2)
 			{
-				int	rightValue = theStack.top();
+				unsigned int	rightValue = theStack.top();
 				theStack.pop();
-				int	leftValue = theStack.top();
+				unsigned int	leftValue = theStack.top();
 				theStack.pop();
 				if (*it == '+')
+				{
+					if (rightValue + leftValue > INT_MAX)
+						throw RPN::TheException("Error");
 					theStack.push(rightValue + leftValue);
+				}
 				else if (*it == '-')
-					theStack.push(leftValue - rightValue);
+				{
+					if (static_cast<long long>(leftValue) -  static_cast<long long>(rightValue)< 0)
+						theStack.push(0);
+					else
+						theStack.push(leftValue - rightValue);
+				}
 				else if (*it == '*')
+				{
+					if (rightValue * leftValue > INT_MAX)
+						throw RPN::TheException("Error");
 					theStack.push(rightValue * leftValue);
+				}
 				else if (*it == '/')
 				{
 					if (rightValue == 0)

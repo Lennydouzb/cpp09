@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:22:41 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 15:28:46 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/28 18:19:58 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #pragma once
@@ -50,4 +50,5 @@ class BitcoinExchange
 		std::map<std::string, float> &getLines();
 };
 
+bool	checkVal(std::stringstream &str);
 void	checkDate(std::string y, std::string m, std::string d);

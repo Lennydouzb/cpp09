@@ -6,14 +6,14 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:45:30 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/12 16:56:52 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/28 18:26:52 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "RPN.hpp"
 
 int	main(int ac, char **av)
 {
-	if (ac < 2)
+	if (ac != 2)
 	{
 		std::cerr << "Error" << std::endl;
 		return 1;

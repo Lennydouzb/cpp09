@@ -6,7 +6,7 @@
 /*   By: ldesboui <ldesboui@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 15:45:30 by ldesboui          #+#    #+#             */
-/*   Updated: 2026/05/26 16:34:37 by ldesboui         ###   ########.fr       */
+/*   Updated: 2026/05/28 18:27:39 by ldesboui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "BitcoinExchange.hpp"
@@ -106,7 +106,8 @@ static void	parseLine(std::string tmp, BitcoinExchange &BtcExchange)
 					throw BitcoinExchange::TheException("input date is out of bound");
 			}
 		}
-
+		if (!checkVal(value))
+			throw BitcoinExchange::TheException("Not a correct digit");
 		if (!(value >> floatValue))
 			throw BitcoinExchange::TheException("Not a correct digit");
 		if (floatValue < 0)
@@ -165,6 +166,9 @@ int	main(int ac, char **av)
 			}
 		}
 	}
-
-
+	else
+	{
+		std::cout << "Input file does not exist" << std::endl;
+		return (1);
+	}
 }
